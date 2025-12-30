@@ -1,36 +1,149 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎤 Singdom Reverse（シンドムリバース）
 
-## Getting Started
+**逆再生された音声から元の言葉を当てる、リアルタイムマルチプレイヤーゲーム**
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
+![Supabase](https://img.shields.io/badge/Supabase-Realtime-3ECF8E?logo=supabase)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
+
+---
+
+## 🎮 ゲーム概要
+
+プレイヤーはお題となる言葉を録音し、その音声が**逆再生**されて他のプレイヤーに届きます。逆再生された音声を聞いて、元の言葉を当てましょう！
+
+### ゲームフロー
+
+```
+🎯 LOBBY（ロビー）
+    ↓ ホストがゲーム開始
+📝 TOPIC_CREATION（お題作成）
+    ↓ 全員が録音完了
+🔀 SHUFFLE（シャッフル）
+    ↓ 3秒のアニメーション
+🎧 RECORDING（回答フェーズ）
+    ↓ 全員が回答完了
+🏆 RESULT（結果発表）
+```
+
+---
+
+## ✨ 主な機能
+
+- **リアルタイムマルチプレイヤー** - Supabase Realtime による低遅延な同期
+- **音声録音 & 逆再生** - ブラウザ内で録音し、バックエンドで音声処理
+- **ルームシステム** - 6桁のルームコードで簡単参加
+- **レスポンシブデザイン** - モバイルフレンドリーなUI
+
+---
+
+## 🛠️ 技術スタック
+
+| カテゴリ | 技術 |
+|---------|------|
+| **フレームワーク** | Next.js 16 (App Router) |
+| **言語** | TypeScript |
+| **スタイリング** | Tailwind CSS 4 |
+| **アニメーション** | Framer Motion |
+| **リアルタイム通信** | Supabase Realtime |
+| **音声処理** | Web Audio API + 外部バックエンド |
+
+---
+
+## 🚀 セットアップ
+
+### 前提条件
+
+- Node.js 18+
+- npm / yarn / pnpm
+- [Audio Effects Backend](https://github.com/kusutohu1128/audio-effects-backend) が起動していること
+
+### インストール
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/kusutohu1128/singdom-reverse.git
+cd singdom-reverse
+
+# 依存関係をインストール
+npm install
+```
+
+### 環境変数の設定
+
+`.env.local` ファイルを作成：
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_API_URL=http://localhost:8001
+```
+
+### 開発サーバーの起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000](http://localhost:3000) でアクセス
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 プロジェクト構成
 
-## Learn More
+```
+singdom-reverse/
+├── app/
+│   ├── page.tsx           # ホーム画面（ルーム作成/参加）
+│   ├── layout.tsx         # 共通レイアウト
+│   └── room/
+│       └── [roomId]/
+│           └── page.tsx   # ゲームルーム画面
+├── components/
+│   └── game/
+│       ├── TopicCreation.tsx  # お題作成コンポーネント
+│       └── Gameplay.tsx       # 回答フェーズコンポーネント
+├── hooks/
+│   ├── useGameRoom.ts      # ゲーム状態管理
+│   ├── useAudioRecorder.ts # 音声録音
+│   └── useAudioPlayer.ts   # 音声再生
+├── lib/
+│   ├── supabase.ts         # Supabaseクライアント
+│   ├── audio.ts            # 音声処理API
+│   └── messages.ts         # ゲーム内メッセージ
+└── ...
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔗 関連リポジトリ
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **[Audio Effects Backend](https://github.com/kusutohu1128/audio-effects-backend)** - 音声処理バックエンド（FastAPI + C++ JUCE）
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📝 デプロイ
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Vercel（推奨）
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/kusutohu1128/singdom-reverse)
+
+1. Vercel にサインイン
+2. このリポジトリをインポート
+3. 環境変数を設定
+4. デプロイ！
+
+---
+
+## 📜 ライセンス
+
+MIT License
+
+---
+
+## 🙏 謝辞
+
+- [Next.js](https://nextjs.org/)
+- [Supabase](https://supabase.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Tailwind CSS](https://tailwindcss.com/)
